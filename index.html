@@ -2,67 +2,108 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>أسعار الذهب اللحظية</title>
+<title>لوحة أسعار الذهب - دار السبائك</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body{
-  background:#0b0b0b;
-  color:#d4af37;
-  font-family:Arial, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
-}
-.box{
-  border:1px solid #d4af37;
-  padding:30px 40px;
-  border-radius:14px;
-  text-align:center;
-  min-width:280px;
-  background:#000;
-}
-h1{margin-bottom:20px; font-size:24px;}
-.row{
-  display:flex;
-  justify-content:space-between;
-  margin:12px 0;
-  font-size:20px;
-}
-.time{
-  font-size:14px;
-  color:#aaa;
-  margin-top:15px;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #1a1a1a, #000);
+    color: #fff;
+  }
+  .dashboard {
+    text-align: center;
+    padding: 20px;
+  }
+  h1 {
+    color: #d4af37;
+    margin-bottom: 10px;
+  }
+  .prices {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .card {
+    background: rgba(255, 223, 0, 0.1);
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    width: 150px;
+    padding: 15px;
+    margin: 10px;
+  }
+  .card h2 { margin: 10px 0; color: #d4af37; }
+  .card p { font-size: 20px; margin: 0; color: #fff; }
+
+  .countdown {
+    font-size: 24px;
+    margin: 20px 0;
+    color: #ffcc00;
+  }
 </style>
 </head>
+
 <body>
-<div class="box">
-  <h1>سعر الذهب الآن</h1>
-  <div class="row"><span>عيار 24</span><span id="g24">0.00 د.ك</span></div>
-  <div class="row"><span>عيار 22</span><span id="g22">0.00 د.ك</span></div>
-  <div class="row"><span>عيار 21</span><span id="g21">0.00 د.ك</span></div>
-  <div class="row"><span>عيار 18</span><span id="g18">0.00 د.ك</span></div>
-  <div class="time" id="time">آخر تحديث: --:--:--</div>
+
+<div class="dashboard">
+  <h1>سعر الذهب الآن (دار السبائك – الكويت)</h1>
+
+  <div class="countdown" id="counter">التحديث بعد: 10s</div>
+
+  <div class="prices">
+    <div class="card">
+      <h2>عيار 24</h2>
+      <p id="p24">51.336 د.ك</p>
+    </div>
+    <div class="card">
+      <h2>عيار 22</h2>
+      <p id="p22">47.102 د.ك</p>
+    </div>
+    <div class="card">
+      <h2>عيار 21</h2>
+      <p id="p21">44.964 د.ك</p>
+    </div>
+    <div class="card">
+      <h2>عيار 18</h2>
+      <p id="p18">38.541 د.ك</p>
+    </div>
+  </div>
+
+  <canvas id="goldChart" width="400" height="200"></canvas>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-function updateGold() {
-  // الأسعار ثابتة كمثال، تقدر تحدّث يوميًا بسهولة
-  const price24 = 25.20; // مثال بالدينار الكويتي
-  document.getElementById("g24").innerText = price24.toFixed(2) + " د.ك";
-  document.getElementById("g22").innerText = (price24*0.916).toFixed(2) + " د.ك";
-  document.getElementById("g21").innerText = (price24*0.875).toFixed(2) + " د.ك";
-  document.getElementById("g18").innerText = (price24*0.750).toFixed(2) + " د.ك";
+  // مخطط الأسعار
+  const ctx = document.getElementById('goldChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['24', '22', '21', '18'],
+      datasets: [{
+        label: 'سعر الذهب (د.ك)',
+        data: [51.336, 47.102, 44.964, 38.541],
+        backgroundColor: ['#d4af37','#c9b037','#b89a2c','#9a7f22']
+      }]
+    }
+  });
 
-  document.getElementById("time").innerText = "آخر تحديث: " + new Date().toLocaleTimeString();
-}
-
-// تحديث أول مرة
-updateGold();
-// تحديث كل دقيقة
-setInterval(updateGold, 60000);
+  // عداد عد تنازلي
+  let time = 10;
+  function countdown() {
+    if (time > 0) {
+      document.getElementById('counter').innerText = "التحديث بعد: " + time + "s";
+      time--;
+    } else {
+      time = 10; // يرجّع العد
+      // لو بتستخدم API حي مستقبلاً هيتحدث هنا
+    }
+  }
+  setInterval(countdown, 1000);
 </script>
+
 </body>
 </html>
